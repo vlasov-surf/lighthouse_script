@@ -11,12 +11,12 @@ mkdir -p "$report_dir/html" "$report_dir/json"
 
 # 🔗 URL-ы для анализа
 urls=(
-  # "https://baucenter.ru/product/gipsovaya-shtukaturka-knauf-rotband-25-kg-ctg-29116-29171-29180-511000304/"
+  "https://baucenter.ru/product/gipsovaya-shtukaturka-knauf-rotband-25-kg-ctg-29116-29171-29180-511000304/"
   "https://baucenter.ru/"
-  # "https://baucenter.ru/personal/cart/"
-  # "https://baucenter.ru/personal/list/5509688/"
-  # "https://baucenter.ru/catalog/shtukaturki-ctg-29116-29171-29180/"
-  # "https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
+  "https://baucenter.ru/personal/cart/"
+  "https://baucenter.ru/personal/list/5509688/"
+  "https://baucenter.ru/catalog/shtukaturki-ctg-29116-29171-29180/"
+  "https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
 )
 
 # 🍪 Актуальные куки для авторизации
