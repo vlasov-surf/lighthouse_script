@@ -7,76 +7,95 @@ current_time=$(date +'%H-%M-%S')
 
 # 📁 Папка для отчётов
 report_dir="./lighthouse_reports/$current_date"
-mkdir -p "$report_dir/html" "$report_dir/json"
 
-# 🔗 URL-ы для анализа
+# Аккаунты:
+#89081412294 - студийный номер (смс падают в Пачку в чат sms-code-from-services ) (ДЛЯ ПРОФИ)
+#89521078905 - симка у Бабайцева Саши  (ДЛЯ БОНУСА)
+
+# 🍪 Cookies
+guestKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNGU5N2IyOC00ZmY0LTExZjAtOTM0ZS1jYWI1Y2FjMzBlMGIiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzM1OTA0Nywicm9sZSI6Imd1ZXN0In0.53HbuTb0n3jvTeK1QCZemX4WCoLkeXuoXzglz0T2m8o"
+guestMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiNGU5N2IyOC00ZmY0LTExZjAtOTM0ZS1jYWI1Y2FjMzBlMGIiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzI0OTI4Nywicm9sZSI6Imd1ZXN0In0.MQtSY18qDzmnkzmuWgGGKT5G_laS67Dh2VZqyuNv4Tk"
+commonKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1OWNkODJjMi01MWEwLTExZjAtYmU2NS0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzQzMzIxOCwicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.LbFC7UenbaPccHvbPNOdZsiWHyB5YnuEaNbkn_45kC8"
+commonMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1OWNkODJjMi01MWEwLTExZjAtYmU2NS0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzQzMzMzNSwicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.nPeGHDFrW-PkOrNbNJLIzHmGIKTfO4UYWkn0ETIfDMM"
+profiKld="authorization="
+profiMsk="authorization="
+
+# 🔗 URL-ы
 urls=(
-  "https://baucenter.ru/product/gipsovaya-shtukaturka-knauf-rotband-25-kg-ctg-29116-29171-29180-511000304/"
-  "https://baucenter.ru/"
-  "https://baucenter.ru/personal/cart/"
-  "https://baucenter.ru/personal/list/5509688/"
-  "https://baucenter.ru/catalog/shtukaturki-ctg-29116-29171-29180/"
-  "https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
+#  "https://baucenter.ru/|mobile|guestKld"
+#  "https://baucenter.ru/|mobile|guestMsk"
+#  "https://baucenter.ru/|mobile|profiMsk"
+#  "https://baucenter.ru/|mobile|commonKld"
+#  "https://baucenter.ru/|desktop|guestKld"
+#  "https://baucenter.ru/|desktop|guestMsk"
+#  "https://baucenter.ru/|desktop|profiMsk"
+#  "https://baucenter.ru/|desktop|commonMsk"
+  "https://baucenter.ru/personal/cart/|desktop|commonMsk"
+#  "https://baucenter.ru/personal/list/5858600/|desktop|commonMsk"
 )
 
-# 🍪 Актуальные куки для авторизации
-cookies="cookieInformed=false; authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhMTJjZmI2Ni00NmExLTExZjAtOGY4YS0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MjIyNDA0NSwicm9sZSI6InByb2ZpIiwic3ViIjoyNDAwMzQ0LCJ0ZWwiOiI3OTAzNjUzMDAwNyIsImxjaSI6IjM5NDQwMzE2ODUiLCJsY3QiOiJib251cyJ9.PuOOAaQWFv_PbVIiAuUplAlCz7Wyp0JbQf4b9LSnJAs"
+# 🔁 Прогон по сценариям
+mkdir -p "$report_dir/json" "$report_dir/html"
 
-# 🔁 Прогон по каждой конфигурации
-for url in "${urls[@]}"
-do
-  base_name=$(basename "$url" | tr -d '?=/:%')
+for urls in "${urls[@]}"; do
+  IFS="|" read -r url form_factor cookie_var <<< "$urls"
 
-  echo "🌐 Страница: $url"
+  cookie=$(eval echo "\$$cookie_var")
+  token=$(echo "$cookie" | cut -d= -f2-)
 
-for form_factor in "mobile" "desktop"; do
-  for auth in "NoAuth" "Auth"; do
+  url_slug=$(echo "$url" | sed -E 's~https?://([^/]+).*~\1~')
+  base_name="${current_date}_${current_time}_${url_slug}_${form_factor}_${cookie_var}"
 
-    base_filename="${current_date}_${current_time}_${form_factor}_${auth}_${base_name}"
-    report_path_json="${report_dir}/json/${base_filename}"
+  tmp_headers_file=$(mktemp)
 
-    chrome_flags="--headless --no-sandbox --disable-gpu"
+  echo "{
+    \"Cookie\": \"$cookie\",
+    \"Authorization\": \"Bearer $token\"
+  }" > "$tmp_headers_file"
+  echo "🔍 Содержимое заголовков:"
+  cat "$tmp_headers_file"
 
-    if [ "$form_factor" = "mobile" ]; then
-      emulated_form_factor="mobile"
-      chrome_flags="$chrome_flags --window-size=375,667"
-    else
-      emulated_form_factor="desktop"
-      chrome_flags="$chrome_flags --window-size=1600,900"
-    fi
 
-    extra_headers=""
-    if [ "$auth" = "Auth" ]; then
-      extra_headers="--extra-headers '{\"Cookie\": \"$cookies\"}'"
-    fi
+  echo "🌐 $url | 📱 $form_factor | 🍪 $cookie_var"
 
-    echo "🚀 Lighthouse: $form_factor / $auth"
+  if [[ "$form_factor" == "mobile" ]]; then
+    window_size="375,667"
+  else
+    window_size="1920,1080"
+  fi
 
+  # Путь для логов
+  json_path="$report_dir/json/${base_name}.json"
+  html_path="$report_dir/html/${base_name}.html"
+
+    # JSON
     lighthouse "$url" \
-      --output html \
+      --emulated-form-factor="$form_factor" \
       --output json \
-      --output-path="$report_path_json" \
-      --emulated-form-factor=$emulated_form_factor \
-      --chrome-flags="$chrome_flags" \
+      --output-path="$json_path" \
+      --extra-headers="$tmp_headers_file" \
       --disable-storage-reset \
       --throttling-method=provided \
-      $extra_headers
+      --chrome-flags="--headless --no-sandbox --disable-gpu --window-size=$window_size"
 
-    mv "${report_dir}/json/${base_filename}.report.html" "${report_dir}/html/"
-    sleep 5
+    # HTML
+    lighthouse "$url" \
+      --emulated-form-factor="$form_factor" \
+      --output html \
+      --output-path="$html_path" \
+      --extra-headers="$tmp_headers_file" \
+      --disable-storage-reset \
+      --throttling-method=provided \
+      --chrome-flags="--headless --no-sandbox --disable-gpu --window-size=$window_size"
 
-  done
-done
-
-done
-
-# 📂 Перемещаем .html из json/ в html/
-echo "📂 Перемещаем .html → html/"
-for file in "$report_dir/json/"*.html; do
-  mv "$file" "$report_dir/html/"
+  rm -f "$tmp_headers_file"
+  sleep 5
 done
 
 # 📊 Генерация XLSX отчета
 echo "📈 Генерация .xlsx отчета..."
 node lighthouse_reports/lighthouse_results.js
 echo "✅ Завершено!"
+
+
+

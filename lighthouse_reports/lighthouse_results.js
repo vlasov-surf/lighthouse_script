@@ -38,39 +38,48 @@ console.log(`📂 Чтение отчетов из: ${targetDir}`);
 const result = [];
 
 const scenarioMap = {
-  'https://baucenter.ru/product/gipsovaya-shtukaturka-knauf-rotband-25-kg-ctg-29116-29171-29180-511000304/': 'OLD Карточка товара',
-  'https://baucenter.ru/': 'OLD Главная',
-  'https://baucenter.ru/personal/cart/': 'OLD Корзина',
-  'https://baucenter.ru/personal/list/5509688/': 'OLD Список покупок',
-  'https://baucenter.ru/catalog/shtukaturki-ctg-29116-29171-29180/': 'OLD Каталог',
-  'https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B': 'OLD Поиск по слову "краны"'
+  'https://baucenter.ru/': 'main',
 };
+
+function extractSeconds(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return (val.numericValue / 1000).toFixed(1); // например: 1005.321 → "1.0"
+}
+
+function extractTbt(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return Math.round(val.numericValue); // например: 168.489 → 168
+}
+
+function extractCls(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return val.numericValue.toFixed(2); // например: 0.661356 → "0.66"
+}
 
 function extractMetrics(jsonPath) {
   const content = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   const audits = content.audits || {};
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
-  const scenario = scenarioMap[pageUrl] || '(unknown)';
+  const id = scenarioMap[pageUrl] || '(unknown)';
   const filename = path.basename(jsonPath).replace('.json', '');
   const parts = filename.split('_');
-  const platform = parts[parts.length - 2]; // adaptive или desktop
-  const rawRole = parts[parts.length - 1];  // Auth.report или NoAuth.report
-  const role = rawRole.startsWith('NoAuth') ? 'NoAuth' : 'Auth';
+  const platform = parts[parts.length - 2];
+  const role = parts[parts.length - 1];
 
   return {
-    scenario: scenario,
-    page: content.finalUrl || '',
-    platform: platform,
-    role: role,
+    id,
+    page: pageUrl,
+    platform,
+    role,
     timestamp: content.fetchTime || '',
-    fcp: +(audits['first-contentful-paint']?.numericValue / 1000).toFixed(2) || 0,
-    lcp: +(audits['largest-contentful-paint']?.numericValue / 1000).toFixed(2) || 0,
-    tti: +(audits['interactive']?.numericValue / 1000).toFixed(2) || 0,
-    si: +(audits['speed-index']?.numericValue / 1000).toFixed(2) || 0,
-    tbt: +(audits['total-blocking-time']?.numericValue).toFixed(2) || 0,
-    cls: +(audits['cumulative-layout-shift']?.numericValue).toFixed(2) || 0,
-    performance: categories['performance']?.score ? categories['performance'].score * 100 : 0
+    fcp: extractSeconds(audits['first-contentful-paint']),
+    lcp: extractSeconds(audits['largest-contentful-paint']),
+    tti: extractSeconds(audits['interactive']),
+    si: extractSeconds(audits['speed-index']),
+    tbt: extractTbt(audits['total-blocking-time']),
+    cls: extractCls(audits['cumulative-layout-shift']),
+    performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0
   };
 }
 
@@ -101,7 +110,7 @@ if (result.length === 0) {
     header: [
       'timestamp',
       'page',
-      'scenario',
+      'id',
       'role',
       'platform',
       'fcp',
