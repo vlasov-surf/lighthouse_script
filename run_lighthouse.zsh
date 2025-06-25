@@ -20,28 +20,38 @@ commonMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1OWNkOD
 profiKld="authorization="
 profiMsk="authorization="
 
+parse_jwt_role() {
+  local jwt=$1
+  local payload=$(echo "$jwt" | cut -d '.' -f2)
+  local padded_payload=$(printf '%s' "$payload" | sed -e 's/-/+/g' -e 's/_/\//g')
+  local decoded=$(echo "$padded_payload" | base64 -d 2>/dev/null)
+
+  echo "$decoded" | grep -oE '"rol(e)?"\s*:\s*"[^"]+"' | cut -d':' -f2 | tr -d ' "'
+}
+
 # 🔗 URL-ы
-urls=(
-#  "https://baucenter.ru/|mobile|guestKld"
-#  "https://baucenter.ru/|mobile|guestMsk"
-#  "https://baucenter.ru/|mobile|profiMsk"
-#  "https://baucenter.ru/|mobile|commonKld"
-#  "https://baucenter.ru/|desktop|guestKld"
-#  "https://baucenter.ru/|desktop|guestMsk"
-#  "https://baucenter.ru/|desktop|profiMsk"
-#  "https://baucenter.ru/|desktop|commonMsk"
-  "https://baucenter.ru/personal/cart/|desktop|commonMsk"
-#  "https://baucenter.ru/personal/list/5858600/|desktop|commonMsk"
+scenarios=(
+  "https://baucenter.ru/|mobile|guestKld"
+  "https://baucenter.ru/|mobile|guestMsk"
+  "https://baucenter.ru/|mobile|profiMsk"
+  "https://baucenter.ru/|mobile|commonKld"
+  "https://baucenter.ru/|desktop|guestKld"
+  "https://baucenter.ru/|desktop|guestMsk"
+  "https://baucenter.ru/|desktop|profiMsk"
+  "https://baucenter.ru/|desktop|commonMsk"
+  "https://baucenter.ru/personal/list/|desktop|commonMsk"
+  "https://baucenter.ru/personal/list/5858600/|desktop|commonMsk"
 )
 
 # 🔁 Прогон по сценариям
 mkdir -p "$report_dir/json" "$report_dir/html"
 
-for urls in "${urls[@]}"; do
-  IFS="|" read -r url form_factor cookie_var <<< "$urls"
+for scenarios in "${scenarios[@]}"; do
+  IFS="|" read -r url form_factor cookie_var <<< "$scenarios"
 
   cookie=$(eval echo "\$$cookie_var")
   token=$(echo "$cookie" | cut -d= -f2-)
+  role=$(parse_jwt_role "$token")
 
   url_slug=$(echo "$url" | sed -E 's~https?://([^/]+).*~\1~')
   base_name="${current_date}_${current_time}_${url_slug}_${form_factor}_${cookie_var}"
@@ -52,6 +62,7 @@ for urls in "${urls[@]}"; do
     \"Cookie\": \"$cookie\",
     \"Authorization\": \"Bearer $token\"
   }" > "$tmp_headers_file"
+  echo "🔐 Роль из токена: $role"
   echo "🔍 Содержимое заголовков:"
   cat "$tmp_headers_file"
 
