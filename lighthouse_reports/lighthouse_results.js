@@ -1,15 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
-
-// 📅 Получаем сегодняшнюю дату (dd.mm.yy)
 const today = new Date();
 const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
 const reportFolderName = `${day}.${month}.${year}`;
 
-// 🔍 Определяем корень проекта (где находится lighthouse_reports)
 function findReportsRootDir() {
   let dir = process.cwd();
   while (!fs.existsSync(path.join(dir, 'lighthouse_reports'))) {
@@ -126,7 +123,7 @@ if (result.length === 0) {
 const workbook = xlsx.utils.book_new();
 xlsx.utils.book_append_sheet(workbook, worksheet, 'Lighthouse Results');
 
-// 📁 Создаём подкаталог xlsx/, если нужно
+// 📁 Создаём подкаталог xlsx
 const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
