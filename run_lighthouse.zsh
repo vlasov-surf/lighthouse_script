@@ -19,8 +19,8 @@ mkdir -p "$logs_dir"
 # Список cookies
 guestKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OGM3NGU1Yy01MjUyLTExZjAtODZjYS0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzUwOTQ4OCwicm9sZSI6Imd1ZXN0In0.5Hck6GHWBmAcxUe2io5iKBdFruc_qvaY4FUZH3OLcYg"
 guestMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmNWIzNzBiZS01MjRjLTExZjAtYWQ1Yi1jYWI1Y2FjMzBlMGIiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzUwNzA5NCwicm9sZSI6Imd1ZXN0In0.c3aMFfQgCZfgLNOepxm36iIEGdEhmRzmfUCLQuu1apQ"
-commonKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OGM3NGU1Yy01MjUyLTExZjAtODZjYS0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzUwOTY4MCwicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.OlGbW5SSB8aPWpFGDNBuKqR6tv64eWmWDCiZcUNxT2M"
-commonMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OGM3NGU1Yy01MjUyLTExZjAtODZjYS0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzUwOTcyMCwicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.GRyX3SXuY9gFqTGATLM_RZHiSaOySi1UgG-AYSDoENY"
+commonKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1ZWM5YWQ5Ni01Mjc3LTExZjAtYTVmMy0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzUyNTQwMywicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.859kAohNL8CDWrOPvF2OjOHz2VvtZ-Mi449COeANri8"
+commonMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1ZWM5YWQ5Ni01Mjc3LTExZjAtYTVmMy0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzUyNTMyNywicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.V0LRhH3ngMSWR5NafGE-RE1KZ8PMjuRsyjmEmD3K-lI"
 profiKld="authorization="
 profiMsk="authorization="
 
@@ -59,14 +59,14 @@ parse_jwt_role() {
 # Сценарии
 # Можешь откомментить чтобы запустить другие урлы
 scenarios=(
-#  "https://baucenter.ru/|mobile|guestKld"
+  "https://baucenter.ru/|mobile|guestKld"
 #  "https://baucenter.ru/|mobile|guestMsk"
 #  "https://baucenter.ru/|mobile|profiMsk"
 #  "https://baucenter.ru/|mobile|commonKld"
-  "https://baucenter.ru/|desktop|guestKld"
+#  "https://baucenter.ru/|desktop|guestKld"
 #  "https://baucenter.ru/|desktop|guestMsk"
 #  "https://baucenter.ru/|desktop|profiMsk"
-#  "https://baucenter.ru/|desktop|commonMsk"
+  "https://baucenter.ru/|desktop|commonMsk"
 #  "https://baucenter.ru/personal/cart/|desktop|commonMsk"
 )
 
