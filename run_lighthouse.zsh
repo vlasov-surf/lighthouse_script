@@ -13,8 +13,8 @@ logs_dir="$report_dir/logs"  # Папка для логов
 mkdir -p "$logs_dir"
 
 # Аккаунты:
-#89081412294 - студийный номер (смс падают в Пачку в чат sms-code-from-services ) (ДЛЯ ПРОФИ)
-#89521078905 - симка у Бабайцева Саши  (ДЛЯ БОНУСА)
+#89081412294 - profi - студийный номер (смс падают в Пачку в чат sms-code-from-services ) (ДЛЯ ПРОФИ)
+#89521078905 - common - симка у Бабайцева Саши  (ДЛЯ БОНУСА)
 
 # Список cookies
 guestKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OGM3NGU1Yy01MjUyLTExZjAtODZjYS0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzUwOTQ4OCwicm9sZSI6Imd1ZXN0In0.5Hck6GHWBmAcxUe2io5iKBdFruc_qvaY4FUZH3OLcYg"
