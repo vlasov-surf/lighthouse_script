@@ -43,6 +43,24 @@ function extractSeconds(val) {
   return (val.numericValue / 1000).toFixed(1); // например: 1005.321 → "1.0"
 }
 
+function extractTtfb(audits) {
+  try {
+    const lcpPhases = audits['lcp-phases-insight']?.details?.items;
+    if (!lcpPhases || !Array.isArray(lcpPhases)) return '';
+    for (const block of lcpPhases) {
+      if (Array.isArray(block.items)) {
+        const ttfbItem = block.items.find(i => i.phase === 'timeToFirstByte');
+        if (ttfbItem?.duration) {
+          return (ttfbItem.duration / 1000).toFixed(1); // мс → сек
+        }
+      }
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
 function extractTbt(val) {
   if (!val || typeof val.numericValue !== 'number') return '';
   return Math.round(val.numericValue); // например: 168.489 → 168
@@ -59,7 +77,7 @@ function extractMetrics(jsonPath) {
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
   const id = scenarioMap[pageUrl] || '(unknown)';
-  const filename = path.basename(jsonPath).replace('.json', '');
+  const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
   const platform = parts[parts.length - 2];
   const role = parts[parts.length - 1];
@@ -76,7 +94,8 @@ function extractMetrics(jsonPath) {
     si: extractSeconds(audits['speed-index']),
     tbt: extractTbt(audits['total-blocking-time']),
     cls: extractCls(audits['cumulative-layout-shift']),
-    performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0
+    performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0,
+    ttfb: extractTtfb(audits)
   };
 }
 
@@ -85,7 +104,7 @@ function walkJsonReports(baseDir) {
   for (const entry of entries) {
     const fullPath = path.join(baseDir, entry);
     if (fs.statSync(fullPath).isDirectory()) {
-      walkJsonReports(fullPath); // рекурсивно
+      walkJsonReports(fullPath);
     } else if (entry.endsWith('.json')) {
       try {
         const metrics = extractMetrics(fullPath);
@@ -116,6 +135,7 @@ if (result.length === 0) {
       'si',
       'tbt',
       'cls',
+      'ttfb',
       'performance',
     ]
   });

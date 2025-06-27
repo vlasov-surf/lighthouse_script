@@ -59,7 +59,7 @@ parse_jwt_role() {
 # Сценарии
 # Можешь откомментить чтобы запустить другие урлы
 scenarios=(
-  "https://baucenter.ru/|mobile|guestKld"
+#  "https://baucenter.ru/|mobile|guestKld"
 #  "https://baucenter.ru/|mobile|guestMsk"
 #  "https://baucenter.ru/|mobile|profiMsk"
 #  "https://baucenter.ru/|mobile|commonKld"
