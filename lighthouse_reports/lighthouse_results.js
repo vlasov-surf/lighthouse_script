@@ -34,9 +34,45 @@ console.log(`📂 Чтение отчетов из: ${targetDir}`);
 
 const result = [];
 
-const scenarioMap = {
-  'https://baucenter.ru/': 'main',
-};
+function resolveId(pageUrl) {
+  //Главная
+  if (pageUrl === 'http://localhost:3000/') return 'main';
+  //Карточка товара
+  if (pageUrl.startsWith('http://localhost:3000/product')) return 'card';
+  //Каталог 2-й уровень
+  if (pageUrl.startsWith('http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/')) return 'catalogSecond';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'catalogSecond';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/oboi-ctg-29494-29512/')) return 'catalogSecond';
+  //Каталог 3-й уровень
+  if (pageUrl.startsWith('http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/')) return 'catalogThird';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/')) return 'catalogThird';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/')) return 'catalogThird';
+  //Поиск
+  if (pageUrl.startsWith('http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'search';
+  if (pageUrl.startsWith('http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'search';
+  return '';
+}
+
+function resolveStuff(pageUrl) {
+  //Карточка товара
+  if (pageUrl.includes('/ogurets')) return 'simple';
+  if (pageUrl.includes('/samorezy')) return 'tp';
+  if (pageUrl.includes('/oboi-flizelinovye')) return 'visual';
+  if (pageUrl.includes('/dver-mezhkomnatnaya')) return 'set';
+  if (pageUrl.includes('/video')) return 'video'; // если появится такой паттерн
+  //Каталог 2-й уровень
+  if (pageUrl.includes('/elektroinstrument-ctg-29290-29342')) return 'full';
+  if (pageUrl.includes('/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'usual';
+  if (pageUrl.includes('/oboi-ctg-29494-29512/')) return 'products';
+  //Каталог 3-й уровень
+  if (pageUrl.includes('/plitka-dlya-vannoy-ctg-29360-29384-30292')) return 'collections';
+  if (pageUrl.includes('/gipsokarton-ctg-29116-29129-29130/')) return 'usual';
+  if (pageUrl.includes('/lampy-e27-ctg-29670-29674-29682/')) return 'full';
+  //Поиск
+  if (pageUrl.includes('/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'usual';
+  if (pageUrl.includes('/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'filters';
+  return '';
+}
 
 function extractSeconds(val) {
   if (!val || typeof val.numericValue !== 'number') return '';
@@ -76,7 +112,11 @@ function extractMetrics(jsonPath) {
   const audits = content.audits || {};
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
-  const id = scenarioMap[pageUrl] || '(unknown)';
+  const id = resolveId(pageUrl);
+  let stuff = resolveStuff(pageUrl);
+  if (id === 'main') {
+    stuff = null;
+  }
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
   const platform = parts[parts.length - 2];
@@ -84,7 +124,8 @@ function extractMetrics(jsonPath) {
 
   return {
     id,
-    page: pageUrl,
+    stuff,
+    // page: pageUrl,
     platform,
     role,
     timestamp: content.fetchTime || '',
@@ -125,10 +166,11 @@ if (result.length === 0) {
   const worksheet = xlsx.utils.json_to_sheet(result, {
     header: [
       'timestamp',
-      'page',
+      // 'page',
       'id',
       'role',
       'platform',
+      'stuff',
       'fcp',
       'lcp',
       'tti',
