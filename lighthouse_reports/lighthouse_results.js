@@ -51,10 +51,19 @@ function resolveId(pageUrl) {
   //Поиск
   if (pageUrl.startsWith('http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'search';
   if (pageUrl.startsWith('http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'search';
+  //Списки покупок
+  if (pageUrl.startsWith('http://localhost:3000/personal/list/')) return 'lists';
+  //Детали списка покупок
+  if (pageUrl.startsWith('http://localhost:3000/personal/list/5865373/')) return 'listDetail';
+  if (pageUrl.startsWith('http://localhost:3000/personal/list/5865817/')) return 'listDetail';
+  //Корзина
+  if (pageUrl.startsWith('http://localhost:3000/personal/cart/')) return 'cart';
+  //Оформление заказа
+  if (pageUrl.startsWith('http://localhost:3000/personal/order/')) return 'order';
   return '';
 }
 
-function resolveEntity(pageUrl) {
+function resolveEntity(pageUrl, role) {
   //Карточка товара
   if (pageUrl.includes('/ogurets')) return 'simple';
   if (pageUrl.includes('/samorezy')) return 'tp';
@@ -72,6 +81,29 @@ function resolveEntity(pageUrl) {
   //Поиск
   if (pageUrl.includes('/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'usual';
   if (pageUrl.includes('/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'filters';
+  //Списки покупок
+  if (pageUrl.includes('/personal/list/')) {
+    return role === 'commonKld' ? 'usual'
+        : role === 'profiMsk' ? 'full'
+            : '';
+  }
+  //Детали списка покупок
+  if (pageUrl.includes('/personal/list/5865373/')) return 'usual';
+  if (pageUrl.includes('/personal/list/5865817/')) return 'full';
+  return '';
+  //Корзина
+  if (pageUrl.includes('/personal/cart/')) {
+    if (role === 'commonKld') return 'usual';
+    if (role === 'profiMsk') return 'full';
+    if (['guestKld', 'guestMsk'].includes(role)) return 'empty';
+    return '';
+  }
+  //Оформление заказа
+  if (pageUrl.includes('/personal/order/')) {
+    if (role === 'commonKld') return 'usual';
+    if (role === 'profiMsk') return 'full';
+    return '';
+  }
   return '';
 }
 
@@ -115,13 +147,28 @@ function extractMetrics(jsonPath) {
   const pageUrl = content.finalUrl || '';
   const id = resolveId(pageUrl);
   let entity = resolveEntity(pageUrl);
-  if (id === 'main') {
-    entity = null;
-  }
+
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
   const platform = parts[parts.length - 2];
   const role = parts[parts.length - 1];
+
+  if (id === 'main') {
+    entity = null;
+  } else if (pageUrl.includes('/personal/list/')) {
+    entity =
+        role === 'profiMsk' ? 'full' : 
+            role === 'commonKld' ? 'usual' : '';
+  } else if (pageUrl.includes('/personal/cart/')) {
+    entity =
+        role === 'profiMsk' ? 'full' : 
+            role === 'commonKld' ? 'usual' :
+            ['guestKld', 'guestMsk'].includes(role) ? 'empty' : '';
+  } else if (pageUrl.includes('/personal/order/')) {
+    entity =
+        role === 'profiMsk' ? 'full' : 
+            role === 'commonKld' ? 'usual' : '';
+  }
 
   return {
     id,
