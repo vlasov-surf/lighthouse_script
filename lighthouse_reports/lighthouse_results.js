@@ -1,15 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
-
-// 📅 Получаем сегодняшнюю дату (dd.mm.yy)
 const today = new Date();
 const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
 const reportFolderName = `${day}.${month}.${year}`;
 
-// 🔍 Определяем корень проекта (где находится lighthouse_reports)
 function findReportsRootDir() {
   let dir = process.cwd();
   while (!fs.existsSync(path.join(dir, 'lighthouse_reports'))) {
@@ -37,40 +34,109 @@ console.log(`📂 Чтение отчетов из: ${targetDir}`);
 
 const result = [];
 
-const scenarioMap = {
-  'https://baucenter.ru/product/gipsovaya-shtukaturka-knauf-rotband-25-kg-ctg-29116-29171-29180-511000304/': 'OLD Карточка товара',
-  'https://baucenter.ru/': 'OLD Главная',
-  'https://baucenter.ru/personal/cart/': 'OLD Корзина',
-  'https://baucenter.ru/personal/list/5509688/': 'OLD Список покупок',
-  'https://baucenter.ru/catalog/shtukaturki-ctg-29116-29171-29180/': 'OLD Каталог',
-  'https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B': 'OLD Поиск по слову "краны"'
-};
+function resolveId(pageUrl) {
+  //Главная
+  if (pageUrl === 'http://localhost:3000/') return 'main';
+  //Карточка товара
+  if (pageUrl.startsWith('http://localhost:3000/product')) return 'card';
+  //Каталог 2-й уровень
+  if (pageUrl.startsWith('http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/')) return 'catalogSecond';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'catalogSecond';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/oboi-ctg-29494-29512/')) return 'catalogSecond';
+  //Каталог 3-й уровень
+  if (pageUrl.startsWith('http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/')) return 'catalogThird';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/')) return 'catalogThird';
+  if (pageUrl.startsWith('http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/')) return 'catalogThird';
+  //Поиск
+  if (pageUrl.startsWith('http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'search';
+  if (pageUrl.startsWith('http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'search';
+  return '';
+}
+
+function resolveStuff(pageUrl) {
+  //Карточка товара
+  if (pageUrl.includes('/ogurets')) return 'simple';
+  if (pageUrl.includes('/samorezy')) return 'tp';
+  if (pageUrl.includes('/oboi-flizelinovye')) return 'visual';
+  if (pageUrl.includes('/dver-mezhkomnatnaya')) return 'set';
+  if (pageUrl.includes('/video')) return 'video'; // если появится такой паттерн
+  //Каталог 2-й уровень
+  if (pageUrl.includes('/elektroinstrument-ctg-29290-29342')) return 'full';
+  if (pageUrl.includes('/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'usual';
+  if (pageUrl.includes('/oboi-ctg-29494-29512/')) return 'products';
+  //Каталог 3-й уровень
+  if (pageUrl.includes('/plitka-dlya-vannoy-ctg-29360-29384-30292')) return 'collections';
+  if (pageUrl.includes('/gipsokarton-ctg-29116-29129-29130/')) return 'usual';
+  if (pageUrl.includes('/lampy-e27-ctg-29670-29674-29682/')) return 'full';
+  //Поиск
+  if (pageUrl.includes('/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'usual';
+  if (pageUrl.includes('/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'filters';
+  return '';
+}
+
+function extractSeconds(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return (val.numericValue / 1000).toFixed(1); // например: 1005.321 → "1.0"
+}
+
+function extractTtfb(audits) {
+  try {
+    const lcpPhases = audits['lcp-phases-insight']?.details?.items;
+    if (!lcpPhases || !Array.isArray(lcpPhases)) return '';
+    for (const block of lcpPhases) {
+      if (Array.isArray(block.items)) {
+        const ttfbItem = block.items.find(i => i.phase === 'timeToFirstByte');
+        if (ttfbItem?.duration) {
+          return (ttfbItem.duration / 1000).toFixed(1); // мс → сек
+        }
+      }
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
+function extractTbt(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return Math.round(val.numericValue); // например: 168.489 → 168
+}
+
+function extractCls(val) {
+  if (!val || typeof val.numericValue !== 'number') return '';
+  return val.numericValue.toFixed(2); // например: 0.661356 → "0.66"
+}
 
 function extractMetrics(jsonPath) {
   const content = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   const audits = content.audits || {};
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
-  const scenario = scenarioMap[pageUrl] || '(unknown)';
-  const filename = path.basename(jsonPath).replace('.json', '');
+  const id = resolveId(pageUrl);
+  let stuff = resolveStuff(pageUrl);
+  if (id === 'main') {
+    stuff = null;
+  }
+  const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
-  const platform = parts[parts.length - 2]; // adaptive или desktop
-  const rawRole = parts[parts.length - 1];  // Auth.report или NoAuth.report
-  const role = rawRole.startsWith('NoAuth') ? 'NoAuth' : 'Auth';
+  const platform = parts[parts.length - 2];
+  const role = parts[parts.length - 1];
 
   return {
-    scenario: scenario,
-    page: content.finalUrl || '',
-    platform: platform,
-    role: role,
+    id,
+    stuff,
+    // page: pageUrl,
+    platform,
+    role,
     timestamp: content.fetchTime || '',
-    fcp: +(audits['first-contentful-paint']?.numericValue / 1000).toFixed(2) || 0,
-    lcp: +(audits['largest-contentful-paint']?.numericValue / 1000).toFixed(2) || 0,
-    tti: +(audits['interactive']?.numericValue / 1000).toFixed(2) || 0,
-    si: +(audits['speed-index']?.numericValue / 1000).toFixed(2) || 0,
-    tbt: +(audits['total-blocking-time']?.numericValue).toFixed(2) || 0,
-    cls: +(audits['cumulative-layout-shift']?.numericValue).toFixed(2) || 0,
-    performance: categories['performance']?.score ? categories['performance'].score * 100 : 0
+    fcp: extractSeconds(audits['first-contentful-paint']),
+    lcp: extractSeconds(audits['largest-contentful-paint']),
+    tti: extractSeconds(audits['interactive']),
+    si: extractSeconds(audits['speed-index']),
+    tbt: extractTbt(audits['total-blocking-time']),
+    cls: extractCls(audits['cumulative-layout-shift']),
+    performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0,
+    ttfb: extractTtfb(audits)
   };
 }
 
@@ -79,7 +145,7 @@ function walkJsonReports(baseDir) {
   for (const entry of entries) {
     const fullPath = path.join(baseDir, entry);
     if (fs.statSync(fullPath).isDirectory()) {
-      walkJsonReports(fullPath); // рекурсивно
+      walkJsonReports(fullPath);
     } else if (entry.endsWith('.json')) {
       try {
         const metrics = extractMetrics(fullPath);
@@ -100,16 +166,18 @@ if (result.length === 0) {
   const worksheet = xlsx.utils.json_to_sheet(result, {
     header: [
       'timestamp',
-      'page',
-      'scenario',
+      // 'page',
+      'id',
       'role',
       'platform',
+      'stuff',
       'fcp',
       'lcp',
       'tti',
       'si',
       'tbt',
       'cls',
+      'ttfb',
       'performance',
     ]
   });
@@ -117,7 +185,7 @@ if (result.length === 0) {
 const workbook = xlsx.utils.book_new();
 xlsx.utils.book_append_sheet(workbook, worksheet, 'Lighthouse Results');
 
-// 📁 Создаём подкаталог xlsx/, если нужно
+// 📁 Создаём подкаталог xlsx
 const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
