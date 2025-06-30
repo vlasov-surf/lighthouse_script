@@ -53,7 +53,7 @@ function resolveId(pageUrl) {
   return '';
 }
 
-function resolveStuff(pageUrl) {
+function resolveEntity(pageUrl) {
   //Карточка товара
   if (pageUrl.includes('/ogurets')) return 'simple';
   if (pageUrl.includes('/samorezy')) return 'tp';
@@ -113,9 +113,9 @@ function extractMetrics(jsonPath) {
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
   const id = resolveId(pageUrl);
-  let stuff = resolveStuff(pageUrl);
+  let entity = resolveEntity(pageUrl);
   if (id === 'main') {
-    stuff = null;
+    entity = null;
   }
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
@@ -124,7 +124,7 @@ function extractMetrics(jsonPath) {
 
   return {
     id,
-    stuff,
+    entity,
     // page: pageUrl,
     platform,
     role,
@@ -168,9 +168,9 @@ if (result.length === 0) {
       'timestamp',
       // 'page',
       'id',
-      'role',
       'platform',
-      'stuff',
+      'role',
+      'entity',
       'fcp',
       'lcp',
       'tti',
