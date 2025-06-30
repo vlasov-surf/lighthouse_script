@@ -23,8 +23,8 @@ guestKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4OGM3NGU
 guestMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmNWIzNzBiZS01MjRjLTExZjAtYWQ1Yi1jYWI1Y2FjMzBlMGIiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzUwNzA5NCwicm9sZSI6Imd1ZXN0In0.c3aMFfQgCZfgLNOepxm36iIEGdEhmRzmfUCLQuu1apQ"
 #истечёт 24.10.2025
 commonKld="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1ZWM5YWQ5Ni01Mjc3LTExZjAtYTVmMy0wMjQyNjcyMjZmNjQiLCJsb2MiOjExMDAzNTg1ODUsImV4cCI6MTc1MzUyNTQwMywicm9sZSI6ImNvbW1vbiIsInN1YiI6Mjk4NTQ2MywidGVsIjoiNzk1MjEwNzg5MDUiLCJsY2kiOiIzOTQ0MDQwMjM3IiwibGN0IjoiYm9udXMifQ.859kAohNL8CDWrOPvF2OjOHz2VvtZ-Mi449COeANri8"
-#истечёт 24.09.2025
-profiMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiYjY3MGMxNi01MzFiLTExZjAtOTU1OC0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1MzYwOTkyOCwicm9sZSI6InByb2ZpIiwic3ViIjoyOTg1NDQ4LCJ0ZWwiOiI3OTA4MTQxMjI5NCIsImxjaSI6IjM5MjE2MDg2MjMiLCJsY3QiOiJwcm9maSJ9.L5kI-XDtjAjVu9-bKLltP_pXjMOBbX_klzzaDKdNQFc"
+#истечёт 30.07.2025
+profiMsk="authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5YmI2MjJjNi01NTg3LTExZjAtYWMxMy0wY2M0N2EzNDQ0M2MiLCJsb2MiOjExMDA0NjgxODIsImV4cCI6MTc1Mzg2Mjk5OSwicm9sZSI6InByb2ZpIiwic3ViIjoyOTg1NDQ4LCJ0ZWwiOiI3OTA4MTQxMjI5NCIsImxjaSI6IjM5MjE2MDg2MjMiLCJsY3QiOiJwcm9maSJ9.-wsmlnudoOUHjRSZiBtAWQBUyBJTKf8sKoqhMRDyo3U"
 
 # Парсинг роли из JWT-токена
 parse_jwt_role() {
@@ -59,7 +59,7 @@ parse_jwt_role() {
 }
 
 # Роли
-roles=("guestKld" "guestMsk" "commonKld" "profiMsk")
+roles=("guestMsk" "guestKld" "profiMsk" "commonKld")
 
 # Сценарии
 main_pages=(
@@ -68,42 +68,57 @@ main_pages=(
 card_simple_pages=(
   "http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/"
 )
-#card_visual_pages=(
-#  "http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/"
-#)
-#card_set_pages=(
-#  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
-#)
-#card_video_pages=(
-#  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
-#)
+card_visual_pages=(
+  "http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/"
+)
+card_set_pages=(
+  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
+)
+card_video_pages=(
+  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
+)
 card_tp_pages=(
   "http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/"
 )
 catalogSecond_full=(
   "http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/"
 )
-#catalogSecond_usual=(
-#  "http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/"
-#)
-#catalogSecond_products=(
-#  "http://localhost:3000/catalog/oboi-ctg-29494-29512/"
-#)
+catalogSecond_usual=(
+  "http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/"
+)
+catalogSecond_products=(
+  "http://localhost:3000/catalog/oboi-ctg-29494-29512/"
+)
 catalogThird_collections=(
   "http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/"
 )
-#catalogThird_usual=(
-#  "http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/"
-#)
-#catalogThird_full=(
-#  "http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/"
-#)
+catalogThird_usual=(
+  "http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/"
+)
+catalogThird_full=(
+  "http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/"
+)
 search_usual=(
   "http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
 )
-#search_filters=(
-#  "http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y"
-#)
+search_filters=(
+  "http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y"
+)
+lists=(
+  "http://localhost:3000/personal/list"
+)
+listDetail_usual=(
+  "http://localhost:3000/personal/list/5865373/"
+)
+listDetail_full=(
+  "http://localhost:3000/personal/list/5865817/"
+)
+cart=(
+  "http://localhost:3000/personal/cart/"
+)
+order=(
+  "http://localhost:3000/personal/order/"
+)
 
 #Тест-сеты
 scenarios=()
@@ -215,6 +230,70 @@ done
 #Поиск-filters
 for url in "${search_filters[@]}"; do
   for role in "${roles[@]}"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Списки покупок
+for url in "${lists[@]}"; do
+  for role in "profiMsk" "commonKld"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Детали списка покупок-usual
+for url in "${listDetail_usual[@]}"; do
+  for role in "commonKld"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Детали списка покупок-full
+for url in "${listDetail_full[@]}"; do
+  for role in "profiMsk"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Корзина-empty
+for url in "${cart[@]}"; do
+  for role in "guestKld" "guestMsk"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Корзина-usual
+for url in "${cart[@]}"; do
+  for role in "commonKld"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Корзина-full
+for url in "${cart[@]}"; do
+  for role in "profiMsk"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Оформление заказа-usual
+for url in "${order[@]}"; do
+  for role in "commonKld"; do
+    scenarios+=("${url}|desktop|${role}")
+    scenarios+=("${url}|mobile|${role}")
+  done
+done
+
+#Оформление заказа-full
+for url in "${order[@]}"; do
+  for role in "profiMsk"; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
   done
