@@ -69,7 +69,7 @@ function resolveEntity(pageUrl, role) {
   if (pageUrl.includes('/samorezy')) return 'tp';
   if (pageUrl.includes('/oboi-flizelinovye')) return 'visual';
   if (pageUrl.includes('/dver-mezhkomnatnaya')) return 'set';
-  if (pageUrl.includes('/video')) return 'video'; // если появится такой паттерн
+  if (pageUrl.includes('/shtukaturka-dekorativnaya-dufa-creative-microcement')) return 'video';
   //Каталог 2-й уровень
   if (pageUrl.includes('/elektroinstrument-ctg-29290-29342')) return 'full';
   if (pageUrl.includes('/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'usual';
