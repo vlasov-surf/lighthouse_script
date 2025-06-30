@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
+const ExcelJS = require('exceljs');
 const today = new Date();
 const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -53,7 +54,7 @@ function resolveId(pageUrl) {
   return '';
 }
 
-function resolveStuff(pageUrl) {
+function resolveEntity(pageUrl) {
   //Карточка товара
   if (pageUrl.includes('/ogurets')) return 'simple';
   if (pageUrl.includes('/samorezy')) return 'tp';
@@ -113,9 +114,9 @@ function extractMetrics(jsonPath) {
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
   const id = resolveId(pageUrl);
-  let stuff = resolveStuff(pageUrl);
+  let entity = resolveEntity(pageUrl);
   if (id === 'main') {
-    stuff = null;
+    entity = null;
   }
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
@@ -124,7 +125,7 @@ function extractMetrics(jsonPath) {
 
   return {
     id,
-    stuff,
+    entity,
     // page: pageUrl,
     platform,
     role,
@@ -162,38 +163,61 @@ walkJsonReports(targetDir);
 
 if (result.length === 0) {
   console.warn('⚠️ Не найдено валидных .json отчетов.');
-} else {
-  const worksheet = xlsx.utils.json_to_sheet(result, {
-    header: [
-      'timestamp',
-      // 'page',
-      'id',
-      'role',
-      'platform',
-      'stuff',
-      'fcp',
-      'lcp',
-      'tti',
-      'si',
-      'tbt',
-      'cls',
-      'ttfb',
-      'performance',
-    ]
+  process.exit(0);
+}
+
+// Создаём Excel-файл с ExcelJS
+const workbook = new ExcelJS.Workbook();
+const worksheet = workbook.addWorksheet('Lighthouse Results');
+
+// Заголовки
+const headers = [
+  'timestamp',
+  'id',
+  'platform',
+  'role',
+  'entity',
+  'fcp',
+  'lcp',
+  'tti',
+  'si',
+  'tbt',
+  'cls',
+  'ttfb',
+  'performance'
+];
+
+// Установка колонок с заголовками
+worksheet.columns = headers.map(header => ({
+  header,
+  key: header,
+  width: header.length + 2 // временная ширина
+}));
+
+// Добавляем строки
+result.forEach(row => {
+  worksheet.addRow(row);
+});
+
+// Жирный шрифт для заголовков
+worksheet.getRow(1).font = { bold: true };
+
+// Автоширина
+worksheet.columns.forEach(column => {
+  let maxLength = column.header.length;
+  column.eachCell({ includeEmpty: true }, cell => {
+    const len = String(cell.value || '').length;
+    if (len > maxLength) maxLength = len;
   });
+  column.width = maxLength + 2;
+});
 
-const workbook = xlsx.utils.book_new();
-xlsx.utils.book_append_sheet(workbook, worksheet, 'Lighthouse Results');
-
-// 📁 Создаём подкаталог xlsx
+// Создание папки для xlsx
 const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
-// 💾 Путь к файлу
+// Сохранение
 const outputFile = path.join(xlsxDir, `lighthouse_report_${reportFolderName}.xlsx`);
-
-// 📤 Сохраняем файл
-xlsx.writeFile(workbook, outputFile);
-
-console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
-}
+workbook.xlsx.writeFile(outputFile).then(() => {
+  console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
+});
