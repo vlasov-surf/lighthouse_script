@@ -75,7 +75,7 @@ card_set_pages=(
   "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
 )
 card_video_pages=(
-  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
+  "http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/"
 )
 card_tp_pages=(
   "http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/"
