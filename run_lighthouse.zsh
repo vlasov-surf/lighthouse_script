@@ -281,7 +281,7 @@ done
 
 #Поиск-filters
 for url in "${search_filters[@]}"; do
-  ffor role in guestMsk guestKld; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
   done
