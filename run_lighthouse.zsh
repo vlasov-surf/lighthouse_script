@@ -214,8 +214,8 @@ done
 #     scenarios+=("${url}|mobile|${role}")
 #   done
 #   for role in profiMsk commonKld; do
-#     scenarios+=("http://localhost:3000/pribory-ucheta-i-kontrolya-ctg-29189-30568/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/pribory-ucheta-i-kontrolya-ctg-29189-30568/|mobile|${role}")
+#     scenarios+=("http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/|desktop|${role}")
+#     scenarios+=("http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/|mobile|${role}")
 #   done
 # done
 
