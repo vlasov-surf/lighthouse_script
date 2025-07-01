@@ -265,7 +265,7 @@ const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
 // Сохранение
-const outputFile = path.join(xlsxDir, `lighthouse_report_${reportFolderName}.xlsx`);
+const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report_${reportFolderName}.xlsx`);
 workbook.xlsx.writeFile(outputFile).then(() => {
   console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
 });
