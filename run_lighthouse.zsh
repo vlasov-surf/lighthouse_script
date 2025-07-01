@@ -63,61 +63,61 @@ roles=("guestMsk" "guestKld" "profiMsk" "commonKld")
 
 # Сценарии
 main_pages=(
-  "http://localhost:3000/"
+  "https://baucenter.ru/"
 )
 card_simple_pages=(
-  "http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/"
+  "https://baucenter.ru/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/"
 )
 card_visual_pages=(
-  "http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/"
+  "https://baucenter.ru/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/"
 )
 card_set_pages=(
-  "http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
+  "https://baucenter.ru/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/"
 )
 card_video_pages=(
-  "http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/"
+  "https://baucenter.ru/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/"
 )
 card_tp_pages=(
-  "http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/"
+  "https://baucenter.ru/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/"
 )
 catalogSecond_full=(
-  "http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/"
+  "https://baucenter.ru/catalog/elektroinstrument-ctg-29290-29342/"
 )
 catalogSecond_usual=(
-  "http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/"
+  "https://baucenter.ru/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/"
 )
 catalogSecond_products=(
-  "http://localhost:3000/catalog/oboi-ctg-29494-29512/"
+  "https://baucenter.ru/catalog/oboi-ctg-29494-29512/"
 )
 catalogThird_collections=(
-  "http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/"
+  "https://baucenter.ru/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/"
 )
 catalogThird_usual=(
-  "http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/"
+  "https://baucenter.ru/catalog/gipsokarton-ctg-29116-29129-29130/"
 )
 catalogThird_full=(
-  "http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/"
+  "https://baucenter.ru/catalog/lampy-e27-ctg-29670-29674-29682/"
 )
 search_usual=(
-  "http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
+  "https://baucenter.ru/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
 )
 search_filters=(
-  "http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y"
+  "https://baucenter.ru/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y"
 )
 lists=(
-  "http://localhost:3000/personal/list"
+  "https://baucenter.ru/personal/list"
 )
 listDetail_usual=(
-  "http://localhost:3000/personal/list/5865373/"
+  "https://baucenter.ru/personal/list/5865373/"
 )
 listDetail_full=(
-  "http://localhost:3000/personal/list/5865817/"
+  "https://baucenter.ru/personal/list/5865817/"
 )
 cart=(
-  "http://localhost:3000/personal/cart/"
+  "https://baucenter.ru/personal/cart/"
 )
 order=(
-  "http://localhost:3000/personal/order/"
+  "https://baucenter.ru/personal/order/"
 )
 
 #Тест-сеты
@@ -125,137 +125,193 @@ scenarios=()
 
 #Главная
 for url in "${main_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000|desktop|${role}")
+    scenarios+=("http://localhost:3000|mobile|${role}")
   done
 done
 
 #Карточка товара-simple
 for url in "${card_simple_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/|desktop|${role}")
+    scenarios+=("http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/|mobile|${role}")
   done
 done
 
 #Карточка товара-visual
 for url in "${card_visual_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/|desktop|${role}")
+    scenarios+=("http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/|mobile|${role}")
   done
 done
 
 #Карточка товара-set
 for url in "${card_set_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/|desktop|${role}")
+    scenarios+=("http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/|mobile|${role}")
   done
 done
 
 #Карточка товара-video
 for url in "${card_video_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/|desktop|${role}")
+    scenarios+=("http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/|mobile|${role}")
   done
 done
 
 #Карточка товара-tp
 for url in "${card_tp_pages[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/|desktop|${role}")
+    scenarios+=("http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/|mobile|${role}")
   done
 done
 
 #Каталог (2-й уровень)-full
 for url in "${catalogSecond_full[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/|desktop|${role}")
+    scenarios+=("http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/|mobile|${role}")
   done
 done
 
 #Каталог (2-й уровень)-usual
 for url in "${catalogSecond_usual[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/pribory-ucheta-i-kontrolya-ctg-29189-30568/|desktop|${role}")
+    scenarios+=("http://localhost:3000/pribory-ucheta-i-kontrolya-ctg-29189-30568/|mobile|${role}")
   done
 done
 
 #Каталог (2-й уровень)-products
 for url in "${catalogSecond_products[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/catalog/oboi-ctg-29494-29512/|desktop|${role}")
+    scenarios+=("http://localhost:3000/catalog/oboi-ctg-29494-29512/|mobile|${role}")
   done
 done
 
 #Каталог (3-й уровень)-collections
 for url in "${catalogThird_collections[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/|desktop|${role}")
+    scenarios+=("http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/|mobile|${role}")
   done
 done
 
 #Каталог (3-й уровень)-usual
 for url in "${catalogThird_usual[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/|desktop|${role}")
+    scenarios+=("http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/|mobile|${role}")
   done
 done
 
 #Каталог (3-й уровень)-full
 for url in "${catalogThird_full[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/|desktop|${role}")
+    scenarios+=("http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/|mobile|${role}")
   done
 done
 
 #Поиск-usual
 for url in "${search_usual[@]}"; do
-  for role in "${roles[@]}"; do
+  for role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B|desktop|${role}")
+    scenarios+=("http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B|mobile|${role}")
   done
 done
 
 #Поиск-filters
 for url in "${search_filters[@]}"; do
-  for role in "${roles[@]}"; do
+  ffor role in guestMsk guestKld; do
     scenarios+=("${url}|desktop|${role}")
     scenarios+=("${url}|mobile|${role}")
+  done
+  for role in profiMsk commonKld; do
+    scenarios+=("http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y|desktop|${role}")
+    scenarios+=("http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y|mobile|${role}")
   done
 done
 
 #Списки покупок
 for url in "${lists[@]}"; do
   for role in "profiMsk" "commonKld"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/list|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/list|mobile|${role}")
   done
 done
 
 #Детали списка покупок-usual
 for url in "${listDetail_usual[@]}"; do
   for role in "commonKld"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/list/5865373/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/list/5865373/|mobile|${role}")
   done
 done
 
 #Детали списка покупок-full
 for url in "${listDetail_full[@]}"; do
   for role in "profiMsk"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/list/5865817/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/list/5865817/|mobile|${role}")
   done
 done
 
@@ -270,32 +326,32 @@ done
 #Корзина-usual
 for url in "${cart[@]}"; do
   for role in "commonKld"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/cart/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/cart/|mobile|${role}")
   done
 done
 
 #Корзина-full
 for url in "${cart[@]}"; do
   for role in "profiMsk"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/cart/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/cart/|mobile|${role}")
   done
 done
 
 #Оформление заказа-usual
 for url in "${order[@]}"; do
   for role in "commonKld"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/order/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/order/|mobile|${role}")
   done
 done
 
 #Оформление заказа-full
 for url in "${order[@]}"; do
   for role in "profiMsk"; do
-    scenarios+=("${url}|desktop|${role}")
-    scenarios+=("${url}|mobile|${role}")
+    scenarios+=("http://localhost:3000/personal/order/|desktop|${role}")
+    scenarios+=("http://localhost:3000/personal/order/|mobile|${role}")
   done
 done
 
