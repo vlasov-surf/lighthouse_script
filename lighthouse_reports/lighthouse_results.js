@@ -7,7 +7,9 @@ const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
 const reportFolderName = `${day}.${month}.${year}`;
-const projectName = 'baucenter';
+const role = 'guest';
+const environment = 'non-local';
+const entity = ''
 
 function findReportsRootDir() {
   let dir = process.cwd();
@@ -38,80 +40,61 @@ const result = [];
 
 function resolveId(pageUrl) {
   //Главная
-  if (pageUrl === 'http://localhost:3000/') return 'main';
-  if (pageUrl === 'https://baucenter.ru/') return 'main';
+  if (pageUrl === 'https://rf.petrovich.ru/') return 'main';
+  if (pageUrl === 'https://lemanapro.ru/') return 'main';
+  if (pageUrl === 'https://www.wildberries.ru/') return 'main';
+  if (pageUrl === 'https://www.ozon.ru/?__rr=1&abt_att=1') return 'main';
+  if (pageUrl === 'https://www.vseinstrumenti.ru/') return 'main';
   //Карточка товара
-  if (pageUrl.includes('/product')) return 'card';
+  if (pageUrl.includes('/product/1083317/')) return 'card';
+  if (pageUrl.includes('/product/oboi-flizelinovye-victoria-stenova-dubai-serye-106-m-vs281067-83616599/')) return 'card';
+  if (pageUrl.includes('/409875904/detail.aspx/')) return 'card';
+  if (pageUrl.includes('/semena-ogurtsy-severnyy-potok-f1-nabor-semyan-ogurtsov-2-upakovki-1841230238/?at=99trJzEggt2v88qlFyEMPrJcxQYJLlU2EOVlDSRn3J9R')) return 'card';
+  if (pageUrl.includes('/product/samorez-dobroga-gkd-3-5x35-mm-oksidirovannyj-50-sht-tsb-00029203-12316793/')) return 'card';
   //Каталог 2-й уровень
-  if (pageUrl.includes('/elektroinstrument-ctg-29290-29342/')) return 'catalogSecond';
-  if (pageUrl.includes('/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'catalogSecond';
-  if (pageUrl.includes('/oboi-ctg-29494-29512/')) return 'catalogSecond';
+  if (pageUrl.includes('/catalog/1579/')) return 'catalogSecond';
+  if (pageUrl.includes('/oboi-dlya-sten-i-potolka/')) return 'catalogSecond';
+  if (pageUrl === 'https://www.wildberries.ru/catalog/dlya-remonta/krepezh/') return 'catalogSecond';
+  if (pageUrl.includes('/category/tsvety-i-rasteniya-14884/')) return 'catalogSecond';
+  if (pageUrl.includes('/category/metizy-170301/')) return 'catalogSecond';
   //Каталог 3-й уровень
-  if (pageUrl.includes('/plitka-dlya-vannoy-ctg-29360-29384-30292/')) return 'catalogThird';
-  if (pageUrl.includes('/gipsokarton-ctg-29116-29129-29130/')) return 'catalogThird';
-  if (pageUrl.includes('/lampy-e27-ctg-29670-29674-29682/')) return 'catalogThird';
+  if (pageUrl.includes('/?sort=popularity_desc')) return 'catalogThird';
+  if (pageUrl.includes('/catalogue/dekorativnye-oboi/')) return 'catalogThird';
+  if (pageUrl.includes('/catalog/dlya-remonta/krepezh/samorezy-i-shurupy/')) return 'catalogThird';
+  if (pageUrl.includes('/category/samorezy-3373/')) return 'catalogThird';
   //Поиск
-  if (pageUrl.includes('/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'search';
-  if (pageUrl.includes('/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'search';
+  if (pageUrl.includes('/search/?q=краны')) return 'search';
+  if (pageUrl.includes('/search/?q=краны&suggest=true')) return 'search';
+  if (pageUrl.includes('/search.aspx?search=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'search';
+  if (pageUrl.includes('/category/krany-dlya-santehniki-10319/?category_was_predicted=true&deny_category_prediction=true&from_global=true&text=краны')) return 'search';
+  if (pageUrl.includes('/search/?what=краны')) return 'search';
   //Списки покупок
-  if (pageUrl.includes('/personal/list/')) return 'lists';
-  //Детали списка покупок
-  if (pageUrl.includes('/personal/list/5865373/')) return 'listDetail';
-  if (pageUrl.includes('/personal/list/5865817/')) return 'listDetail';
+  if (pageUrl.includes('/cabinet/estimates/')) return 'lists';
+  if (pageUrl.includes('/shopping-list/')) return 'lists';
+  if (pageUrl.includes('/favorites/')) return 'lists';
+  if (pageUrl.includes('/my/favorites/')) return 'lists';
+  if (pageUrl.includes('/user/favorites/')) return 'lists';
   //Корзина
-  if (pageUrl.includes('/personal/cart/')) return 'cart';
-  //Оформление заказа
-  if (pageUrl.includes('/personal/order/')) return 'order';
+  if (pageUrl === 'https://rf.petrovich.ru/cart/pre-order/rf/') return 'cart';
+  if (pageUrl === 'https://lemanapro.ru/basket/') return 'cart';
+  if (pageUrl === 'https://www.wildberries.ru/lk/basket') return 'cart';
+  if (pageUrl === 'https://www.wildberries.ru/lk/basket') return 'cart';
+  if (pageUrl.includes('ozon.ru/cart')) return 'cart';
+  if (pageUrl.includes('/cart-checkout-v3/')) return 'cart';
   return '';
 }
 
-function resolveEntity(pageUrl, role) {
-  //Карточка товара
-  if (pageUrl.includes('/ogurets')) return 'simple';
-  if (pageUrl.includes('/samorezy')) return 'tp';
-  if (pageUrl.includes('/oboi-flizelinovye')) return 'visual';
-  if (pageUrl.includes('/dver-mezhkomnatnaya')) return 'set';
-  if (pageUrl.includes('/shtukaturka-dekorativnaya-dufa-creative-microcement')) return 'video';
-  //Каталог 2-й уровень
-  if (pageUrl.includes('/elektroinstrument-ctg-29290-29342')) return 'full';
-  if (pageUrl.includes('/pribory-ucheta-i-kontrolya-ctg-29189-30568/')) return 'usual';
-  if (pageUrl.includes('/oboi-ctg-29494-29512/')) return 'products';
-  //Каталог 3-й уровень
-  if (pageUrl.includes('/plitka-dlya-vannoy-ctg-29360-29384-30292')) return 'collections';
-  if (pageUrl.includes('/gipsokarton-ctg-29116-29129-29130/')) return 'usual';
-  if (pageUrl.includes('/lampy-e27-ctg-29670-29674-29682/')) return 'full';
-  //Поиск
-  if (pageUrl.includes('/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B')) return 'usual';
-  if (pageUrl.includes('/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y')) return 'filters';
-  //Списки покупок
-  if (pageUrl.includes('/personal/list/')) {
-    return role === 'commonKld' ? 'usual'
-        : role === 'profiMsk' ? 'full'
-            : '';
-  }
-  //Детали списка покупок
-  if (pageUrl.includes('/personal/list/5865373/')) return 'usual';
-  if (pageUrl.includes('/personal/list/5865817/')) return 'full';
-  return '';
-  //Корзина
-  if (pageUrl.includes('/personal/cart/')) {
-    if (role === 'commonKld') return 'usual';
-    if (role === 'profiMsk') return 'full';
-    if (['guestKld', 'guestMsk'].includes(role)) return 'empty';
-    return '';
-  }
-  //Оформление заказа
-  if (pageUrl.includes('/personal/order/')) {
-    if (role === 'commonKld') return 'usual';
-    if (role === 'profiMsk') return 'full';
-    return '';
-  }
-  return '';
-}
-
-function resolveEnvironment(pageUrl) {
-  if(pageUrl.includes('localhost:3000')) return 'local';
-  if(pageUrl.includes('baucenter.ru')) return 'non-local';
+function resolveProject(pageUrl) {
+  //Петрович
+  if (pageUrl.includes('rf.petrovich.ru')) return 'petrovich';
+  //Лемана
+  if (pageUrl.includes('lemanapro.ru/')) return 'lemana';
+  //ВБ
+  if (pageUrl.includes('wildberries.ru/')) return 'wildberries';
+  //Озон
+  if (pageUrl.includes('ozon.ru/')) return 'ozon';
+  //Все инструменты
+  if (pageUrl.includes('vseinstrumenti.ru/')) return 'ozon';
   return '';
 }
 
@@ -154,29 +137,10 @@ function extractMetrics(jsonPath) {
   const categories = content.categories || {};
   const pageUrl = content.finalUrl || '';
   const id = resolveId(pageUrl);
-  let entity = resolveEntity(pageUrl);
-  const environment = resolveEnvironment(pageUrl);
+  const project = resolveProject(pageUrl);
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
-  const platform = parts[parts.length - 2];
-  const role = parts[parts.length - 1];
-
-  if (id === 'main') {
-    entity = null;
-  } else if (pageUrl.includes('/personal/list/')) {
-    entity =
-        role === 'profiMsk' ? 'full' : 
-            role === 'commonKld' ? 'usual' : '';
-  } else if (pageUrl.includes('/personal/cart/')) {
-    entity =
-        role === 'profiMsk' ? 'full' : 
-            role === 'commonKld' ? 'usual' :
-            ['guestKld', 'guestMsk'].includes(role) ? 'empty' : '';
-  } else if (pageUrl.includes('/personal/order/')) {
-    entity =
-        role === 'profiMsk' ? 'full' : 
-            role === 'commonKld' ? 'usual' : '';
-  }
+  const platform = parts.pop();
 
   return {
     id,
@@ -184,8 +148,9 @@ function extractMetrics(jsonPath) {
     // page: pageUrl,
     platform,
     role,
+    project,
     environment,
-    projectName,
+    entity,
     timestamp: content.fetchTime || '',
     fcp: extractSeconds(audits['first-contentful-paint']),
     lcp: extractSeconds(audits['largest-contentful-paint']),
@@ -230,7 +195,7 @@ const worksheet = workbook.addWorksheet('Lighthouse Results');
 // Заголовки
 const headers = [
   'timestamp',
-  'projectName',
+  'project',
   'environment',
   'id',
   'platform',
@@ -276,7 +241,7 @@ const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
 // Сохранение
-const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report_${reportFolderName}.xlsx`);
+const outputFile = path.join(xlsxDir, `competitors_lighthouse_report_${reportFolderName}.xlsx`);
 workbook.xlsx.writeFile(outputFile).then(() => {
   console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
 });
