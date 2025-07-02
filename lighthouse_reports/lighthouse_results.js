@@ -7,7 +7,7 @@ const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
 const reportFolderName = `${day}.${month}.${year}`;
-const projectName = 'baucenter';
+const project = 'baucenter';
 
 function findReportsRootDir() {
   let dir = process.cwd();
@@ -185,7 +185,7 @@ function extractMetrics(jsonPath) {
     platform,
     role,
     environment,
-    projectName,
+    project,
     timestamp: content.fetchTime || '',
     fcp: extractSeconds(audits['first-contentful-paint']),
     lcp: extractSeconds(audits['largest-contentful-paint']),
@@ -230,7 +230,7 @@ const worksheet = workbook.addWorksheet('Lighthouse Results');
 // Заголовки
 const headers = [
   'timestamp',
-  'projectName',
+  'project',
   'environment',
   'id',
   'platform',
