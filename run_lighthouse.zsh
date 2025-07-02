@@ -130,7 +130,7 @@ EOF
   fi
 
     # Если это сайт "Все инструменты", создаем файл с cookie
-  elif [[ "$url" == *"lemanapro.ru"* ]]; then
+  if [[ "$url" == *"lemanapro.ru"* ]]; then
     echo "Применяю cookie для $url"
   cat > "$headers_file" <<EOF
 {
