@@ -108,6 +108,12 @@ function resolveEntity(pageUrl, role) {
   return '';
 }
 
+function resolveEnvironment(pageUrl) {
+  if(pageUrl.includes('localhost:3000')) return 'local';
+  if(pageUrl.includes('baucenter.ru')) return 'non-local';
+  return '';
+}
+
 function extractSeconds(val) {
   if (!val || typeof val.numericValue !== 'number') return '';
   return (val.numericValue / 1000).toFixed(1); // например: 1005.321 → "1.0"
@@ -148,7 +154,7 @@ function extractMetrics(jsonPath) {
   const pageUrl = content.finalUrl || '';
   const id = resolveId(pageUrl);
   let entity = resolveEntity(pageUrl);
-
+  const environment = resolveEnvironment(pageUrl);
   const filename = path.basename(jsonPath).replace(/\.report\.json$/, '');
   const parts = filename.split('_');
   const platform = parts[parts.length - 2];
@@ -177,6 +183,7 @@ function extractMetrics(jsonPath) {
     // page: pageUrl,
     platform,
     role,
+    environment,
     timestamp: content.fetchTime || '',
     fcp: extractSeconds(audits['first-contentful-paint']),
     lcp: extractSeconds(audits['largest-contentful-paint']),
@@ -221,6 +228,7 @@ const worksheet = workbook.addWorksheet('Lighthouse Results');
 // Заголовки
 const headers = [
   'timestamp',
+  'environment',
   'id',
   'platform',
   'role',
