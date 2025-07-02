@@ -131,10 +131,10 @@ for url in "${main_pages[@]}"; do
     scenarios+=("${url}|mobile|${role}")
   done
   # НАЗ - прогон локальный, смотрим на прод
-  for role in guestMsk guestKld; do
-    scenarios+=("http://localhost:3000|desktop|${role}")
-    scenarios+=("http://localhost:3000|mobile|${role}")
-  done
+  # for role in guestMsk guestKld; do
+  #   scenarios+=("http://localhost:3000|desktop|${role}")
+  #   scenarios+=("http://localhost:3000|mobile|${role}")
+  # done
   # НАЗ - прогон локальный, смотрим на прод
   for role in profiMsk commonKld; do
     scenarios+=("http://localhost:3000|desktop|${role}")
