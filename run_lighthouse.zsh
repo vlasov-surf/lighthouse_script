@@ -6,8 +6,23 @@ current_date=$(date +'%d.%m.%y')
 current_time=$(date +'%H-%M-%S')
 
 # Папка для отчётов
-report_dir="./lighthouse_reports/$current_date"
+report_dir="./lighthouse_reports/competitors"
 logs_dir="$report_dir/logs"  # Папка для логов
+
+# Функция для очистки файлов .json и .html в папке logs
+clear_logs_directory() {
+  # Проверяем, существует ли папка logs
+  if [ -d "$logs_dir" ]; then
+    echo "🧹 Очищаем .json и .html файлы из папки logs..."
+    rm -f "$logs_dir"/*.json "$logs_dir"/*.html # Удаляем только .json и .html файлы
+    echo "✅ Файлы .json и .html удалены из папки logs."
+  else
+    echo "⚠️ Папка logs не найдена."
+  fi
+}
+
+# Очищаем .json и .html файлы перед прогоном
+clear_logs_directory
 
 # Создаем папки для отчетов и логов
 mkdir -p "$logs_dir"
@@ -47,7 +62,6 @@ wildberries=(
   "https://www.wildberries.ru/catalog/dlya-remonta/krepezh/"
   "https://www.wildberries.ru/catalog/dlya-remonta/krepezh/samorezy-i-shurupy/"
   "https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B"
-  "https://www.wildberries.ru/lk/favorites"
   "https://www.wildberries.ru/lk/basket"
 )
 ozon=(

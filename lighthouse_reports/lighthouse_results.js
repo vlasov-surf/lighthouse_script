@@ -6,7 +6,6 @@ const today = new Date();
 const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
-const reportFolderName = `${day}.${month}.${year}`;
 const role = 'guest';
 const environment = 'non-local';
 const entity = ''
@@ -27,7 +26,7 @@ function findReportsRootDir() {
 }
 
 const reportsRootDir = findReportsRootDir();
-const targetDir = path.join(reportsRootDir, reportFolderName);
+const targetDir = path.join(reportsRootDir, 'competitors', 'logs');
 
 if (!fs.existsSync(targetDir)) {
   console.error(`❌ Папка с отчетами за сегодня не найдена: ${targetDir}`);
@@ -77,7 +76,6 @@ function resolveId(pageUrl) {
   //Корзина
   if (pageUrl === 'https://rf.petrovich.ru/cart/pre-order/rf/') return 'cart';
   if (pageUrl === 'https://lemanapro.ru/basket/') return 'cart';
-  if (pageUrl === 'https://www.wildberries.ru/lk/basket') return 'cart';
   if (pageUrl === 'https://www.wildberries.ru/lk/basket') return 'cart';
   if (pageUrl.includes('ozon.ru/cart')) return 'cart';
   if (pageUrl.includes('/cart-checkout-v3/')) return 'cart';
@@ -143,23 +141,22 @@ function extractMetrics(jsonPath) {
   const platform = parts.pop();
 
   return {
-    id,
-    entity,
+    timestamp: content.fetchTime || '',
+    project,
     // page: pageUrl,
+    environment,
+    id,
     platform,
     role,
-    project,
-    environment,
     entity,
-    timestamp: content.fetchTime || '',
     fcp: extractSeconds(audits['first-contentful-paint']),
     lcp: extractSeconds(audits['largest-contentful-paint']),
     tti: extractSeconds(audits['interactive']),
     si: extractSeconds(audits['speed-index']),
     tbt: extractTbt(audits['total-blocking-time']),
     cls: extractCls(audits['cumulative-layout-shift']),
+    ttfb: extractTtfb(audits),
     performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0,
-    ttfb: extractTtfb(audits)
   };
 }
 
@@ -190,7 +187,12 @@ if (result.length === 0) {
 
 // Создаём Excel-файл с ExcelJS
 const workbook = new ExcelJS.Workbook();
-const worksheet = workbook.addWorksheet('Lighthouse Results');
+
+// Создание папки для xlsx если её нет
+const xlsxDir = path.join(targetDir, 'xlsx');
+if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
+
+const outputFile = path.join(xlsxDir, `competitors_lighthouse_report.xlsx`);
 
 // Заголовки
 const headers = [
@@ -211,37 +213,93 @@ const headers = [
   'performance'
 ];
 
-// Установка колонок с заголовками
-worksheet.columns = headers.map(header => ({
-  header,
-  key: header,
-  width: header.length + 2 // временная ширина
-}));
+let existingRows = [];
 
-// Добавляем строки
-result.forEach(row => {
-  worksheet.addRow(row);
-});
+// Если файл существует, читаем существующие данные
+if (fs.existsSync(outputFile)) {
+  const existingWorkbook = new ExcelJS.Workbook();
+  existingWorkbook.xlsx.readFile(outputFile)
+    .then(() => {
+      const existingSheet = existingWorkbook.getWorksheet('Lighthouse Results');
+      existingSheet.eachRow((row, rowNumber) => {
+        if (rowNumber > 1) { // Пропускаем заголовки
+          const rowData = {};
+          row.eachCell((cell, colNumber) => {
+            rowData[headers[colNumber - 1]] = cell.value;
+          });
+          existingRows.push(rowData);
+        }
+      });
+      
+      // Добавляем новые данные
+      existingRows = existingRows.concat(result);
+      
+      // Создаем новый лист
+      const newSheet = workbook.addWorksheet('Lighthouse Results');
+      
+      // Установка колонок с заголовками
+      newSheet.columns = headers.map(header => ({
+        header,
+        key: header,
+        width: header.length + 2
+      }));
 
-// Жирный шрифт для заголовков
-worksheet.getRow(1).font = { bold: true };
+      // Добавляем все строки
+      existingRows.forEach(row => {
+        newSheet.addRow(row);
+      });
 
-// Автоширина
-worksheet.columns.forEach(column => {
-  let maxLength = column.header.length;
-  column.eachCell({ includeEmpty: true }, cell => {
-    const len = String(cell.value || '').length;
-    if (len > maxLength) maxLength = len;
+      // Жирный шрифт для заголовков
+      newSheet.getRow(1).font = { bold: true };
+
+      // Автоширина
+      newSheet.columns.forEach(column => {
+        let maxLength = column.header.length;
+        column.eachCell({ includeEmpty: true }, cell => {
+          const len = String(cell.value || '').length;
+          if (len > maxLength) maxLength = len;
+        });
+        column.width = maxLength + 2;
+      });
+
+      // Сохранение
+      return workbook.xlsx.writeFile(outputFile);
+    })
+    .then(() => {
+      console.log(`📊 XLSX отчет обновлён: ${outputFile}`);
+    });
+} else {
+  // Если файл не существует, создаем новый
+  const newSheet = workbook.addWorksheet('Lighthouse Results');
+  
+  // Установка колонок с заголовками
+  newSheet.columns = headers.map(header => ({
+    header,
+    key: header,
+    width: header.length + 2
+  }));
+
+  // Добавляем новые строки
+  result.forEach(row => {
+    newSheet.addRow(row);
   });
-  column.width = maxLength + 2;
-});
 
-// Создание папки для xlsx
-const xlsxDir = path.join(targetDir, 'xlsx');
-if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
+  // Жирный шрифт для заголовков
+  newSheet.getRow(1).font = { bold: true };
 
-// Сохранение
-const outputFile = path.join(xlsxDir, `competitors_lighthouse_report_${reportFolderName}.xlsx`);
-workbook.xlsx.writeFile(outputFile).then(() => {
-  console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
-});
+  // Автоширина
+  newSheet.columns.forEach(column => {
+    let maxLength = column.header.length;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const len = String(cell.value || '').length;
+      if (len > maxLength) maxLength = len;
+    });
+    column.width = maxLength + 2;
+  });
+
+  // Сохранение
+  workbook.xlsx.writeFile(outputFile)
+    .then(() => {
+      console.log(`📊 XLSX отчет создан: ${outputFile}`);
+    });
+}
