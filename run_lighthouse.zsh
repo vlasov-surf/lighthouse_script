@@ -146,11 +146,6 @@ for url in "${main_pages[@]}"; do
     scenarios+=("${url}|mobile|${role}")
   done
   # НАЗ - прогон локальный, смотрим на прод
-  # for role in guestMsk guestKld; do
-  #   scenarios+=("http://localhost:3000|desktop|${role}")
-  #   scenarios+=("http://localhost:3000|mobile|${role}")
-  # done
-  # НАЗ - прогон локальный, смотрим на прод
   for role in profiMsk commonKld; do
     scenarios+=("http://localhost:3000|desktop|${role}")
     scenarios+=("http://localhost:3000|mobile|${role}")
@@ -163,11 +158,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/product/ogurets-vostochnyy-ekspress-f1-a-ctg-29705-29775-31112-935003269/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -183,11 +173,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/product/oboi-flizelinovye-10kh1-06-m-elysium-rustika-e52126-ctg-29494-29512-29518-301017540/|desktop|${role}")
@@ -201,11 +186,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/product/dver-mezhkomnatnaya-osteklennaya-2000kh800-mm-en2-seraya-ctg-29559-29563-29566-609006577/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -221,11 +201,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/product/shtukaturka-dekorativnaya-dufa-creative-microcement-8-kg-belaya-ctg-36829-29525-29530-351000211/|desktop|${role}")
@@ -239,11 +214,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/product/samorezy-po-metallu-dlya-gipsokartona-fixberg-3-5kh25-mm-250-sht-ctg-29320-29325-32231-720005964/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -259,11 +229,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/catalog/elektroinstrument-ctg-29290-29342/|desktop|${role}")
@@ -277,11 +242,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/pribory-ucheta-i-kontrolya-ctg-29189-30568/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -297,11 +257,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/oboi-ctg-29494-29512/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/oboi-ctg-29494-29512/|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/catalog/oboi-ctg-29494-29512/|desktop|${role}")
@@ -315,11 +270,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/plitka-dlya-vannoy-ctg-29360-29384-30292/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -335,11 +285,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/catalog/gipsokarton-ctg-29116-29129-29130/|desktop|${role}")
@@ -353,11 +298,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/catalog/lampy-e27-ctg-29670-29674-29682/|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -373,11 +313,6 @@ done
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
 #   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B|desktop|${role}")
-#     scenarios+=("http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B|mobile|${role}")
-#   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
 #     scenarios+=("http://localhost:3000/search/?query=%D0%BA%D1%80%D0%B0%D0%BD%D1%8B|desktop|${role}")
@@ -391,11 +326,6 @@ done
 #   for role in guestMsk guestKld; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in guestMsk guestKld; do
-#     scenarios+=("http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y|desktop|${role}")
-#     scenarios+=("http://localhost:3000/search/?query=%D1%81%D0%BA%D0%BE%D1%82%D1%87&sectionIds=30654,30656,32003&set_filter=y&arrFilter_5279_2644469059=Y&arrFilter_5279_2671857292=Y&arrFilter_5279_1439224407=Y|mobile|${role}")
 #   done
 #   # АЗ - прогон локальный, смотрим на прод
 #   for role in profiMsk commonKld; do
@@ -437,11 +367,6 @@ done
 #   for role in "guestKld" "guestMsk"; do
 #     scenarios+=("${url}|desktop|${role}")
 #     scenarios+=("${url}|mobile|${role}")
-#   done
-#   # НАЗ - прогон локальный, смотрим на прод
-#   for role in "guestKld" "guestMsk"; do
-#     scenarios+=("http://localhost:3000/personal/cart/|desktop|${role}")
-#     scenarios+=("http://localhost:3000/personal/cart/|mobile|${role}")
 #   done
 # done
 
