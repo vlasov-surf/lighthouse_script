@@ -24,7 +24,7 @@ function findReportsRootDir() {
 }
 
 const reportsRootDir = findReportsRootDir();
-const targetDir = path.join(reportsRootDir, 'baucenter', 'xlsx');
+const targetDir = path.join(reportsRootDir, 'baucenter', 'logs');
 
 if (!fs.existsSync(targetDir)) {
   console.error(`❌ Папка с отчетами за сегодня не найдена: ${targetDir}`);
