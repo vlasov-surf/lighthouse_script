@@ -6,7 +6,6 @@ const today = new Date();
 const day = String(today.getDate()).padStart(2, '0');
 const month = String(today.getMonth() + 1).padStart(2, '0');
 const year = String(today.getFullYear()).slice(-2);
-const reportFolderName = `${day}.${month}.${year}`;
 const project = 'baucenter';
 
 function findReportsRootDir() {
@@ -25,7 +24,7 @@ function findReportsRootDir() {
 }
 
 const reportsRootDir = findReportsRootDir();
-const targetDir = path.join(reportsRootDir, reportFolderName);
+const targetDir = path.join(reportsRootDir, 'baucenter', 'xlsx');
 
 if (!fs.existsSync(targetDir)) {
   console.error(`❌ Папка с отчетами за сегодня не найдена: ${targetDir}`);
@@ -179,22 +178,22 @@ function extractMetrics(jsonPath) {
   }
 
   return {
-    id,
-    entity,
+    timestamp: content.fetchTime || '',
+    project,
     // page: pageUrl,
+    environment,
+    id,
     platform,
     role,
-    environment,
-    project,
-    timestamp: content.fetchTime || '',
+    entity,
     fcp: extractSeconds(audits['first-contentful-paint']),
     lcp: extractSeconds(audits['largest-contentful-paint']),
     tti: extractSeconds(audits['interactive']),
     si: extractSeconds(audits['speed-index']),
     tbt: extractTbt(audits['total-blocking-time']),
     cls: extractCls(audits['cumulative-layout-shift']),
+    ttfb: extractTtfb(audits),
     performance: categories['performance']?.score ? Math.round(categories['performance'].score * 100) : 0,
-    ttfb: extractTtfb(audits)
   };
 }
 
@@ -276,7 +275,7 @@ const xlsxDir = path.join(targetDir, 'xlsx');
 if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
 
 // Сохранение
-const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report_${reportFolderName}.xlsx`);
+const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report.xlsx`);
 workbook.xlsx.writeFile(outputFile).then(() => {
   console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
 });

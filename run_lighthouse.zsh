@@ -6,8 +6,23 @@ current_date=$(date +'%d.%m.%y')
 current_time=$(date +'%H-%M-%S')
 
 # Папка для отчётов
-report_dir="./lighthouse_reports/$current_date"
+report_dir="./lighthouse_reports/baucenter"
 logs_dir="$report_dir/logs"  # Папка для логов
+
+# Функция для очистки папки logs
+clear_logs_directory() {
+  # Проверяем, существует ли папка logs
+  if [ -d "$logs_dir" ]; then
+    echo "🧹 Очищаем папку logs..."
+    rm -rf "$logs_dir"/* # Удаляем все файлы в папке logs
+    echo "✅ Папка logs очищена."
+  else
+    echo "⚠️ Папка logs не найдена."
+  fi
+}
+
+# Очищаем папку logs перед прогоном
+clear_logs_directory
 
 # Создаем папки для отчетов и логов
 mkdir -p "$logs_dir"
