@@ -224,7 +224,12 @@ if (result.length === 0) {
 
 // Создаём Excel-файл с ExcelJS
 const workbook = new ExcelJS.Workbook();
-const worksheet = workbook.addWorksheet('Lighthouse Results');
+
+// Создание папки для xlsx если её нет
+const xlsxDir = path.join(targetDir, 'xlsx');
+if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
+
+const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report.xlsx`);
 
 // Заголовки
 const headers = [
@@ -245,37 +250,93 @@ const headers = [
   'performance'
 ];
 
-// Установка колонок с заголовками
-worksheet.columns = headers.map(header => ({
-  header,
-  key: header,
-  width: header.length + 2 // временная ширина
-}));
+let existingRows = [];
 
-// Добавляем строки
-result.forEach(row => {
-  worksheet.addRow(row);
-});
+// Если файл существует, читаем существующие данные
+if (fs.existsSync(outputFile)) {
+  const existingWorkbook = new ExcelJS.Workbook();
+  existingWorkbook.xlsx.readFile(outputFile)
+    .then(() => {
+      const existingSheet = existingWorkbook.getWorksheet('Lighthouse Results');
+      existingSheet.eachRow((row, rowNumber) => {
+        if (rowNumber > 1) { // Пропускаем заголовки
+          const rowData = {};
+          row.eachCell((cell, colNumber) => {
+            rowData[headers[colNumber - 1]] = cell.value;
+          });
+          existingRows.push(rowData);
+        }
+      });
+      
+      // Добавляем новые данные
+      existingRows = existingRows.concat(result);
+      
+      // Создаем новый лист
+      const newSheet = workbook.addWorksheet('Lighthouse Results');
+      
+      // Установка колонок с заголовками
+      newSheet.columns = headers.map(header => ({
+        header,
+        key: header,
+        width: header.length + 2
+      }));
 
-// Жирный шрифт для заголовков
-worksheet.getRow(1).font = { bold: true };
+      // Добавляем все строки
+      existingRows.forEach(row => {
+        newSheet.addRow(row);
+      });
 
-// Автоширина
-worksheet.columns.forEach(column => {
-  let maxLength = column.header.length;
-  column.eachCell({ includeEmpty: true }, cell => {
-    const len = String(cell.value || '').length;
-    if (len > maxLength) maxLength = len;
+      // Жирный шрифт для заголовков
+      newSheet.getRow(1).font = { bold: true };
+
+      // Автоширина
+      newSheet.columns.forEach(column => {
+        let maxLength = column.header.length;
+        column.eachCell({ includeEmpty: true }, cell => {
+          const len = String(cell.value || '').length;
+          if (len > maxLength) maxLength = len;
+        });
+        column.width = maxLength + 2;
+      });
+
+      // Сохранение
+      return workbook.xlsx.writeFile(outputFile);
+    })
+    .then(() => {
+      console.log(`📊 XLSX отчет обновлён: ${outputFile}`);
+    });
+} else {
+  // Если файл не существует, создаем новый
+  const newSheet = workbook.addWorksheet('Lighthouse Results');
+  
+  // Установка колонок с заголовками
+  newSheet.columns = headers.map(header => ({
+    header,
+    key: header,
+    width: header.length + 2
+  }));
+
+  // Добавляем новые строки
+  result.forEach(row => {
+    newSheet.addRow(row);
   });
-  column.width = maxLength + 2;
-});
 
-// Создание папки для xlsx
-const xlsxDir = path.join(targetDir, 'xlsx');
-if (!fs.existsSync(xlsxDir)) fs.mkdirSync(xlsxDir);
+  // Жирный шрифт для заголовков
+  newSheet.getRow(1).font = { bold: true };
 
-// Сохранение
-const outputFile = path.join(xlsxDir, `baucenter_lighthouse_report.xlsx`);
-workbook.xlsx.writeFile(outputFile).then(() => {
-  console.log(`📊 XLSX отчет сохранён: ${outputFile}`);
-});
+  // Автоширина
+  newSheet.columns.forEach(column => {
+    let maxLength = column.header.length;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const len = String(cell.value || '').length;
+      if (len > maxLength) maxLength = len;
+    });
+    column.width = maxLength + 2;
+  });
+
+  // Сохранение
+  workbook.xlsx.writeFile(outputFile)
+    .then(() => {
+      console.log(`📊 XLSX отчет создан: ${outputFile}`);
+    });
+}
