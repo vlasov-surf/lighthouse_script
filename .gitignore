@@ -1,0 +1,5 @@
+lighthouse_reports/competitors/*
+lighthouse_reports/baucenter/*
+lighthouse_reports/*
+!lighthouse_reports/lighthouse_results.js
+.DS_Store
